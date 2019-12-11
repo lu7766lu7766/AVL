@@ -1,18 +1,28 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col-md-3">
-        <b-form-input v-model="search.name" placeholder="請輸入商店名稱"></b-form-input>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-3">
+          <label >商店名稱</label>
+          <input type="input" class="form-control" v-model="search.name" placeholder="請輸入商店名稱">
+        </div>
       </div>
     </div>
-    <!--<div class="row">-->
-      <!--<div class="col-md-3">-->
-        <!--<b-form-input v-model="search.date" type="date" placeholder="請輸入營業日期"></b-form-input>-->
-      <!--</div>-->
-      <!--<div class="col-md-3">-->
-        <!--<b-form-input v-model="search.time" type="time" placeholder="請輸入營業時間"></b-form-input>-->
-      <!--</div>-->
-    <!--</div>-->
+
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-3">
+          <label >營業日期</label>
+          <b-form-input v-model="search.date" type="date" placeholder="請輸入營業日期"></b-form-input>
+        </div>
+        <div class="col-md-3">
+          <label >營業時間</label>
+          <b-form-input v-model="search.time" type="time" placeholder="請輸入營業時間"></b-form-input>
+        </div>
+      </div>
+    </div>
+
+    <br />
     <div class="row">
       <div class="col-md-12">
 
@@ -22,7 +32,7 @@
             <th scope="col">#</th>
             <th scope="col">店名</th>
             <th scope="col">營業時間</th>
-            <th scope="col">操作</th>
+            <th scope="col"></th>
           </tr>
           </thead>
           <tbody>
@@ -43,6 +53,8 @@
 <script>
   import axios from 'axios'
   import _ from 'lodash'
+  import moment from 'moment'
+
   export default {
     data: () => ({
       search: {
@@ -51,6 +63,7 @@
         time: ''
       },
       datas: [],
+      workingDatas: [],
       translate: {
         weekDay: {
           'Mon': '星期一',
@@ -65,7 +78,13 @@
     }),
     computed: {
       tableData() {
-        return this.datas.filter(x => {
+        const datas = _.cloneDeep(this.datas)
+        if (this.search.date && this.search.time) {
+          // workingDatas
+          // moment(this.search.date + ' ' this.search.time).isBetween()
+        }
+
+        return datas.filter(x => {
           _.forEach(this.translate.weekDay, (name, code) => {
             if (x.time.indexOf(code) > -1) {
               x.time = x.time.replace(code, name)
@@ -78,10 +97,11 @@
     async mounted()
     {
       this.datas = (await axios.get('api/store')).data
+      this.workingDatas = (await axios.get('api/store/working')).data
     }
   }
 </script>
 
 <style>
-  
+
 </style>
