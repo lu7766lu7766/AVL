@@ -2,6 +2,7 @@ const express = require('express')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 const app = express()
+const StoreParser = require('./store_parser')
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
@@ -20,6 +21,13 @@ async function start () {
   } else {
     await nuxt.ready()
   }
+
+  app.get('/api/store/working', (req, res) => {
+    res.json(StoreParser.working())
+  })
+  app.get('/api/store/name', (req, res) => {
+    res.json(StoreParser.name())
+  })
 
   // Give nuxt middleware to express
   app.use(nuxt.render)
