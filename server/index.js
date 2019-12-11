@@ -22,11 +22,14 @@ async function start () {
     await nuxt.ready()
   }
 
-  app.get('/api/store/working', (req, res) => {
-    res.json(StoreParser.working())
+  app.get('/api/store', async (req, res) => {
+    res.json(await StoreParser.original())
   })
-  app.get('/api/store/name', (req, res) => {
-    res.json(StoreParser.name())
+  app.get('/api/store/working', async (req, res) => {
+    res.json(await StoreParser.working())
+  })
+  app.get('/api/store/name', async (req, res) => {
+    res.json(await StoreParser.name())
   })
 
   // Give nuxt middleware to express

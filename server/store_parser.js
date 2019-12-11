@@ -29,7 +29,7 @@ class StoreParser {
               const dayParse0 = this.daysParse(perTime.split(' ')[0])
               const dayParse1 = this.daysParse(perTime.split(' ')[1])
               const days = dayParse0.concat(dayParse1)
-              console.log(data.name,perTime.split(' ')[0],perTime.split(' ')[1], dayParse0, dayParse1)
+              // console.log(data.name,perTime.split(' ')[0],perTime.split(' ')[1], dayParse0, dayParse1)
               const splice = dayParse1.length ? 2 : 1
               _.forEach(days, day => {
                 result.push({
@@ -47,7 +47,7 @@ class StoreParser {
 
   static daysParse(str) {
     if (str.indexOf('-') > -1) {
-      console.log(str , str.indexOf('-') > -1)
+      // console.log(str , str.indexOf('-') > -1)
       const range = []
       _.forEach(weekMapping, (day, word) => {
         if (str.indexOf(word) > -1) {
@@ -79,10 +79,24 @@ class StoreParser {
         });
     })
   }
+
+  static original() {
+    const rows = []
+    return new Promise((resolve) => {
+      fs.createReadStream(pathResolve('public/store.csv'))
+        .pipe(csv())
+        .on('data', (row) => {
+          rows.push(row)
+        })
+        .on('end', () => {
+          resolve(rows)
+        });
+    })
+  }
 }
 
 // (async function () {
 //   // console.log(await StoreParser.parse())
 //   // await StoreParser.parse()
 // })()
-module.exports = StoreParser
+exports = module.exports = StoreParser
